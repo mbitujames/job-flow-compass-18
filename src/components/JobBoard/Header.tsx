@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, User, Briefcase, Bell } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -31,10 +32,12 @@ const Header = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
-              <User className="mr-2 h-4 w-4" />
-              Sign In
-            </Button>
+            <Link to="/signin">
+              <Button variant="ghost" size="sm">
+                <User className="mr-2 h-4 w-4" />
+                Sign In
+              </Button>
+            </Link>
             <Button variant="hero" size="sm">
               Post a Job
             </Button>
@@ -63,10 +66,12 @@ const Header = () => {
                 Resources
               </a>
               <div className="flex flex-col space-y-2 pt-4">
-                <Button variant="ghost" size="sm" className="justify-start">
-                  <User className="mr-2 h-4 w-4" />
-                  Sign In
-                </Button>
+                <Link to="/signin">
+                  <Button variant="ghost" size="sm" className="justify-start w-full">
+                    <User className="mr-2 h-4 w-4" />
+                    Sign In
+                  </Button>
+                </Link>
                 <Button variant="hero" size="sm">
                   Post a Job
                 </Button>

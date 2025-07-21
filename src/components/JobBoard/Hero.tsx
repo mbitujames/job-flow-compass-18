@@ -16,7 +16,7 @@ const Hero = () => {
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${heroImage})` }}
       >
-        <div className="absolute inset-0 bg-gradient-hero/90"></div>
+        <div className="absolute inset-0 bg-primary/95"></div>
       </div>
 
       {/* Content */}
@@ -24,13 +24,13 @@ const Hero = () => {
         <div className="space-y-8">
           {/* Headline */}
           <div className="space-y-4">
-            <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight">
+            <h1 className="text-4xl md:text-6xl font-bold text-primary-foreground leading-tight">
               Find Your Perfect
-              <span className="block bg-gradient-to-r from-white to-primary-glow bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-primary-foreground to-accent bg-clip-text text-transparent">
                 Career Match
               </span>
             </h1>
-            <p className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto">
+            <p className="text-xl md:text-2xl text-primary-foreground/90 max-w-2xl mx-auto">
               Discover thousands of opportunities from top companies and startups. Your dream job is just a search away.
             </p>
           </div>
@@ -89,8 +89,8 @@ const Hero = () => {
               { number: "50,000+", label: "Job Seekers" },
             ].map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-white">{stat.number}</div>
-                <div className="text-white/80 text-lg">{stat.label}</div>
+                <div className="text-3xl md:text-4xl font-bold text-primary-foreground">{stat.number}</div>
+                <div className="text-primary-foreground/80 text-lg">{stat.label}</div>
               </div>
             ))}
           </div>
