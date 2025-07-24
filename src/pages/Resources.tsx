@@ -3,8 +3,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Users, Briefcase, Target, FileText, Video, MessageCircle, TrendingUp } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Resources = () => {
+  const getResourceLink = (title: string) => {
+    switch (title) {
+      case "Resume Builder": return "/resume-builder";
+      case "Skill Assessment": return "/skill-assessment";
+      default: return "#";
+    }
+  };
   const resourceCategories = [
     {
       icon: <FileText className="h-6 w-6" />,
@@ -116,9 +124,11 @@ const Resources = () => {
                   <CardDescription className="mb-4">
                     {resource.description}
                   </CardDescription>
-                  <Button variant="outline" className="w-full">
-                    Get Started
-                  </Button>
+                  <Link to={getResourceLink(resource.title)}>
+                    <Button variant="outline" className="w-full">
+                      Get Started
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             ))}

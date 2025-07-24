@@ -38,9 +38,11 @@ const Header = () => {
                 Sign In
               </Button>
             </Link>
-            <Button variant="hero" size="sm">
-              Post a Job
-            </Button>
+            <Link to="/post-job">
+              <Button variant="hero" size="sm">
+                Post a Job
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -72,9 +74,11 @@ const Header = () => {
                     Sign In
                   </Button>
                 </Link>
-                <Button variant="hero" size="sm">
-                  Post a Job
-                </Button>
+                <Link to="/post-job">
+                  <Button variant="hero" size="sm">
+                    Post a Job
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
