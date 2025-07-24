@@ -19,15 +19,15 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#" className="text-foreground hover:text-primary transition-smooth">
+            <Link to="/jobs" className="text-foreground hover:text-primary transition-smooth">
               Find Jobs
-            </a>
-            <a href="#" className="text-foreground hover:text-primary transition-smooth">
+            </Link>
+            <Link to="/companies" className="text-foreground hover:text-primary transition-smooth">
               Companies
-            </a>
-            <a href="#" className="text-foreground hover:text-primary transition-smooth">
+            </Link>
+            <Link to="/resources" className="text-foreground hover:text-primary transition-smooth">
               Resources
-            </a>
+            </Link>
           </nav>
 
           {/* Desktop Actions */}
@@ -56,15 +56,15 @@ const Header = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-border">
             <div className="flex flex-col space-y-4">
-              <a href="#" className="text-foreground hover:text-primary transition-smooth">
+              <Link to="/jobs" className="text-foreground hover:text-primary transition-smooth">
                 Find Jobs
-              </a>
-              <a href="#" className="text-foreground hover:text-primary transition-smooth">
+              </Link>
+              <Link to="/companies" className="text-foreground hover:text-primary transition-smooth">
                 Companies
-              </a>
-              <a href="#" className="text-foreground hover:text-primary transition-smooth">
+              </Link>
+              <Link to="/resources" className="text-foreground hover:text-primary transition-smooth">
                 Resources
-              </a>
+              </Link>
               <div className="flex flex-col space-y-2 pt-4">
                 <Link to="/signin">
                   <Button variant="ghost" size="sm" className="justify-start w-full">
