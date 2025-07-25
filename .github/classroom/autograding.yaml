@@ -1,0 +1,80 @@
+tests:
+  - name: Check for README.md
+    run: test -f README.md
+    input: ""
+    output: ""
+    comparison: included
+    timeout: 10
+    points: 10
+
+  - name: Check for frontend and backend structure
+    run: test -d client && test -d server
+    input: ""
+    output: ""
+    comparison: included
+    timeout: 10
+    points: 10
+
+  - name: Check for package.json files
+    run: test -f client/package.json && test -f server/package.json
+    input: ""
+    output: ""
+    comparison: included
+    timeout: 10
+    points: 10
+
+  - name: Check for MongoDB integration
+    run: grep -q "mongoose\|mongodb" server/package.json || grep -q "mongoose\|mongodb" server/src -r
+    input: ""
+    output: ""
+    comparison: included
+    timeout: 10
+    points: 10
+
+  - name: Check for Express.js backend
+    run: grep -q "express" server/package.json
+    input: ""
+    output: ""
+    comparison: included
+    timeout: 10
+    points: 10
+
+  - name: Check for React frontend
+    run: grep -q "react" client/package.json
+    input: ""
+    output: ""
+    comparison: included
+    timeout: 10
+    points: 10
+
+  - name: Check for authentication implementation
+    run: grep -q "auth\|login\|register\|jwt\|token\|password" server/src -r
+    input: ""
+    output: ""
+    comparison: included
+    timeout: 10
+    points: 10
+
+  - name: Check for testing setup
+    run: grep -q "test\|jest\|mocha\|cypress\|playwright" client/package.json || grep -q "test\|jest\|mocha\|cypress\|playwright" server/package.json
+    input: ""
+    output: ""
+    comparison: included
+    timeout: 10
+    points: 10
+
+  - name: Check for API endpoints
+    run: grep -q "router\|app.get\|app.post\|app.put\|app.delete" server/src -r
+    input: ""
+    output: ""
+    comparison: included
+    timeout: 10
+    points: 10
+
+  - name: Check for deployment information
+    run: grep -q "deploy\|vercel\|netlify\|heroku\|render\|railway\|production\|live" README.md
+    input: ""
+    output: ""
+    comparison: included
+    timeout: 10
+    points: 10 

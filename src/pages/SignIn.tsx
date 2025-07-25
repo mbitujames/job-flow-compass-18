@@ -14,10 +14,32 @@ const SignIn = () => {
     password: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle sign in logic here
-    console.log("Sign in:", formData);
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        alert('Login successful!');
+        // Save token to localStorage or context for authenticated requests
+        localStorage.setItem('token', data.token);
+        // Optionally redirect to dashboard or home page
+      } else {
+        const data = await response.json();
+        alert('Login failed: ' + data.message);
+      }
+    } catch (error) {
+      alert('Login error: ' + error);
+    }
   };
 
   return (

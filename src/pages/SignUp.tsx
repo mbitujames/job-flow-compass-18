@@ -21,10 +21,36 @@ const SignUp = () => {
     position: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle sign up logic here
-    console.log("Sign up:", { ...formData, userType });
+    try {
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.firstName + ' ' + formData.lastName,
+          email: formData.email,
+          password: formData.password,
+          role: userType,
+        }),
+      });
+      if (response.ok) {
+        alert('Signup successful! Please login.');
+        // Optionally redirect to login page
+      } else {
+        let data = {};
+        try {
+          data = await response.json();
+        } catch {
+          data = { message: 'Unknown error' };
+        }
+        alert('Signup failed: ' + (data.message || 'Unknown error'));
+      }
+    } catch (error) {
+      alert('Signup error: ' + error);
+    }
   };
 
   return (
