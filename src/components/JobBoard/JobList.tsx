@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import JobCard from "./JobCard";
 import { Filter, Search, MapPin, SlidersHorizontal, Grid, List } from "lucide-react";
+import { useJobs } from "@/contexts/JobContext";
 
 // Mock job data
 const mockJobs = [
@@ -89,15 +90,34 @@ const mockJobs = [
 ];
 
 const JobList = () => {
-  const [jobs] = useState(mockJobs);
+  const { jobs, fetchJobs, isLoading } = useJobs();
   const [searchQuery, setSearchQuery] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
 
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  // Transform backend jobs to match frontend format
+  const transformedJobs = jobs.map(job => ({
+    id: job._id,
+    title: job.title,
+    company: job.companyId?.name || 'Unknown Company',
+    location: job.location || job.companyId?.location || 'Remote',
+    type: 'Full-time', // You can add type to your Job model
+    salary: job.salaryRange || 'Competitive',
+    postedTime: new Date(job.postedAt).toLocaleDateString(),
+    description: job.description,
+    skills: job.skillsRequired || [],
+    isRemote: !job.location || job.location.toLowerCase().includes('remote'),
+    isFeatured: false, // You can add featured flag to your Job model
+  }));
+
   // Filter jobs based on search criteria
-  const filteredJobs = jobs.filter((job) => {
+  const filteredJobs = transformedJobs.filter((job) => {
     const matchesSearch = !searchQuery || 
       job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||

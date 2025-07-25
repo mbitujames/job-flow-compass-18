@@ -18,9 +18,13 @@ app.use(morgan('dev'));
 // Routes
 import authRoutes from './routes/auth';
 import jobRoutes from './routes/job';
+import applicationRoutes from './routes/application';
+import companyRoutes from './routes/company';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/jobs', jobRoutes);
+app.use('/api/applications', applicationRoutes);
+app.use('/api/companies', companyRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('MERN Job Board Backend is running');

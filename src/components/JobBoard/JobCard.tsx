@@ -1,6 +1,14 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { MapPin, Clock, Briefcase, Heart, ExternalLink } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useJobs } from "@/contexts/JobContext";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface JobCardProps {
   job: {
@@ -20,6 +28,54 @@ interface JobCardProps {
 }
 
 const JobCard = ({ job }: JobCardProps) => {
+  const [isApplyDialogOpen, setIsApplyDialogOpen] = useState(false);
+  const [coverLetter, setCoverLetter] = useState("");
+  const [isApplying, setIsApplying] = useState(false);
+  
+  const { isAuthenticated } = useAuth();
+  const { applyToJob } = useJobs();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const handleApply = async () => {
+    if (!isAuthenticated) {
+      toast({
+        title: "Authentication required",
+        description: "Please sign in to apply for jobs",
+        variant: "destructive",
+      });
+      navigate('/signin');
+      return;
+    }
+
+    setIsApplying(true);
+    try {
+      const success = await applyToJob(job.id, coverLetter);
+      if (success) {
+        toast({
+          title: "Application submitted!",
+          description: "Your application has been sent successfully",
+        });
+        setIsApplyDialogOpen(false);
+        setCoverLetter("");
+      } else {
+        toast({
+          title: "Application failed",
+          description: "Unable to submit application. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsApplying(false);
+    }
+  };
+
   return (
     <div className="bg-gradient-card border border-border rounded-xl p-6 shadow-soft hover:shadow-medium transition-smooth group">
       {/* Header */}
@@ -97,9 +153,39 @@ const JobCard = ({ job }: JobCardProps) => {
           <ExternalLink className="mr-2 h-4 w-4" />
           View Details
         </Button>
-        <Button variant="default" size="sm">
-          Apply Now
-        </Button>
+        
+        <Dialog open={isApplyDialogOpen} onOpenChange={setIsApplyDialogOpen}>
+          <DialogTrigger asChild>
+            <Button variant="default" size="sm">
+              Apply Now
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Apply for {job.title}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="coverLetter">Cover Letter (Optional)</Label>
+                <Textarea
+                  id="coverLetter"
+                  placeholder="Tell us why you're interested in this position..."
+                  value={coverLetter}
+                  onChange={(e) => setCoverLetter(e.target.value)}
+                  rows={6}
+                />
+              </div>
+              <div className="flex justify-end space-x-2">
+                <Button variant="outline" onClick={() => setIsApplyDialogOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleApply} disabled={isApplying}>
+                  {isApplying ? "Submitting..." : "Submit Application"}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Featured Badge */}

@@ -5,40 +5,49 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        alert('Login successful!');
-        // Save token to localStorage or context for authenticated requests
-        localStorage.setItem('token', data.token);
-        // Optionally redirect to dashboard or home page
+      const success = await login(formData.email, formData.password);
+      if (success) {
+        toast({
+          title: "Login successful!",
+          description: "Welcome back to JobFlow",
+        });
+        navigate('/dashboard');
       } else {
-        const data = await response.json();
-        alert('Login failed: ' + data.message);
+        toast({
+          title: "Login failed",
+          description: "Invalid email or password",
+          variant: "destructive",
+        });
       }
     } catch (error) {
-      alert('Login error: ' + error);
+      toast({
+        title: "Login error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -111,8 +120,8 @@ const SignIn = () => {
                 </Link>
               </div>
 
-              <Button type="submit" variant="default" className="w-full" size="lg">
-                Sign In
+              <Button type="submit" variant="default" className="w-full" size="lg" disabled={isLoading}>
+                {isLoading ? "Signing In..." : "Sign In"}
               </Button>
 
               <Separator />

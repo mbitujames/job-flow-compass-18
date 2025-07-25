@@ -6,10 +6,13 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Eye, EyeOff, ArrowLeft, User, Briefcase } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [userType, setUserType] = useState<"jobseeker" | "employer">("jobseeker");
   const [formData, setFormData] = useState({
     firstName: "",
@@ -21,35 +24,53 @@ const SignUp = () => {
     position: "",
   });
 
+  const { signup } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.firstName + ' ' + formData.lastName,
-          email: formData.email,
-          password: formData.password,
-          role: userType,
-        }),
+    
+    if (formData.password !== formData.confirmPassword) {
+      toast({
+        title: "Password mismatch",
+        description: "Passwords do not match",
+        variant: "destructive",
       });
-      if (response.ok) {
-        alert('Signup successful! Please login.');
-        // Optionally redirect to login page
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      const success = await signup(
+        formData.firstName + ' ' + formData.lastName,
+        formData.email,
+        formData.password,
+        userType
+      );
+      
+      if (success) {
+        toast({
+          title: "Account created successfully!",
+          description: "Please sign in to continue",
+        });
+        navigate('/signin');
       } else {
-        let data = {};
-        try {
-          data = await response.json();
-        } catch {
-          data = { message: 'Unknown error' };
-        }
-        alert('Signup failed: ' + (data.message || 'Unknown error'));
+        toast({
+          title: "Signup failed",
+          description: "Please check your information and try again",
+          variant: "destructive",
+        });
       }
     } catch (error) {
-      alert('Signup error: ' + error);
+      toast({
+        title: "Signup error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -207,8 +228,8 @@ const SignUp = () => {
                 </Label>
               </div>
 
-              <Button type="submit" variant="default" className="w-full" size="lg">
-                Create Account
+              <Button type="submit" variant="default" className="w-full" size="lg" disabled={isLoading}>
+                {isLoading ? "Creating Account..." : "Create Account"}
               </Button>
 
               <Separator />
