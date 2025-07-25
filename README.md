@@ -45,7 +45,7 @@ JobFlow is a modern job board platform designed to connect job seekers with top 
 4. Open your browser and visit `http://localhost:8080` to access the application.
 
 ## Deployed Application
-[JobFlow Live Demo](https://your-deployment-url.com)  
+[JobFlow Live Demo](https://job-flow-compass-18.vercel.app/)  
 *(Replace with actual deployment URL)*
 
 ## Video Demonstration
@@ -55,17 +55,19 @@ Watch a 5-10 minute video demonstration of JobFlow:
 ## Screenshots of Key Features
 
 ### Home Page
-![Home Page](./screenshots/home-page.png)
+![Home Page](./src/assets/home.png)
 
 ### Jobs Listing
-![Jobs Listing](./screenshots/jobs-listing.png)
+![Jobs Listing](./src/assets/jobs.png)
 
-### Post a Job (Restricted to Authorized Users)
-![Post Job](./screenshots/post-job.png)
+### Resources Page
+![Resources](./src/assets/resources.png)
 
-### Dashboard
-![Dashboard](./screenshots/dashboard.png)
+### Post Job
+![Post Job Form](./src/assets/postjob.png)
 
+### Post Job
+![Sign In Page](./src/assets/signin.png)
 ---
 
 For any questions or issues, please contact the project maintainer.
