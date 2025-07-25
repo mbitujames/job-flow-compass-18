@@ -1,73 +1,71 @@
-# Welcome to your Lovable project
+# JobFlow
 
-## Project info
+## Project Description
+JobFlow is a modern job board platform designed to connect job seekers with top companies and startups worldwide. It offers a sleek and user-friendly interface for browsing job opportunities, managing applications, and posting new job listings. The platform supports role-based access, ensuring that only authorized users can post jobs. Key features include job search with filters, user authentication, profile management, and a responsive design for seamless experience across devices.
 
-**URL**: https://lovable.dev/projects/ea80d483-727d-4970-8e9a-e395e51e1752
+## Setup Instructions
 
-## How can I edit this code?
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn
+- MongoDB (local or cloud instance)
 
-There are several ways of editing your application.
+### Backend Setup
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Configure environment variables (create `.env` file) with your MongoDB URI and other settings.
+4. Seed the database with initial companies and jobs:
+   ```bash
+   npx ts-node seedJobs.ts
+   ```
+5. Start the backend server:
+   ```bash
+   npm run dev
+   ```
 
-**Use Lovable**
+### Frontend Setup
+1. Navigate to the frontend directory (root):
+   ```bash
+   cd ..
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the frontend development server:
+   ```bash
+   npm run dev
+   ```
+4. Open your browser and visit `http://localhost:8080` to access the application.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/ea80d483-727d-4970-8e9a-e395e51e1752) and start prompting.
+## Deployed Application
+[JobFlow Live Demo](https://your-deployment-url.com)  
+*(Replace with actual deployment URL)*
 
-Changes made via Lovable will be committed automatically to this repo.
+## Video Demonstration
+Watch a 5-10 minute video demonstration of JobFlow:  
+[JobFlow Pitch Deck & Demo](https://www.canva.com/design/DAGuLYcTuzc/Ev7OPxaCm6_RlDXaFt0qyw/edit?utm_content=DAGuLYcTuzc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
-**Use your preferred IDE**
+## Screenshots of Key Features
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Home Page
+![Home Page](./screenshots/home-page.png)
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Jobs Listing
+![Jobs Listing](./screenshots/jobs-listing.png)
 
-Follow these steps:
+### Post a Job (Restricted to Authorized Users)
+![Post Job](./screenshots/post-job.png)
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Dashboard
+![Dashboard](./screenshots/dashboard.png)
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+---
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/ea80d483-727d-4970-8e9a-e395e51e1752) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+For any questions or issues, please contact the project maintainer.

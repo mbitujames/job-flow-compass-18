@@ -9,9 +9,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Plus, X, MapPin, DollarSign, Clock, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const PostJob = () => {
   const { toast } = useToast();
+  const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
   const [skills, setSkills] = useState<string[]>([]);
   const [currentSkill, setCurrentSkill] = useState("");
   const [benefits, setBenefits] = useState<string[]>([]);
@@ -46,6 +51,11 @@ const PostJob = () => {
       description: "Your job posting has been published and is now live.",
     });
   };
+
+  if (!isAuthenticated || (user && user.role !== "employer" && user.role !== "company")) {
+    navigate("/signin");
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-background">

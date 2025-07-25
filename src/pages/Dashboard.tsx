@@ -19,7 +19,8 @@ import {
   LogOut,
   Search
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Mock data for applied jobs
 const appliedJobs = [
@@ -93,6 +94,13 @@ const getStatusIcon = (status: string) => {
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("applications");
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/signin");
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -115,7 +123,7 @@ const Dashboard = () => {
                 <AvatarImage src="/placeholder-avatar.jpg" />
                 <AvatarFallback>JD</AvatarFallback>
               </Avatar>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
               </Button>

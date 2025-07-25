@@ -7,7 +7,6 @@ import JobCard from "./JobCard";
 import { Filter, Search, MapPin, SlidersHorizontal, Grid, List } from "lucide-react";
 import { useJobs } from "@/contexts/JobContext";
 
-// Mock job data
 const mockJobs = [
   {
     id: "1",
@@ -61,59 +60,33 @@ const mockJobs = [
     isRemote: true,
     isFeatured: true,
   },
-  {
-    id: "5",
-    title: "Backend Engineer",
-    company: "CloudCorp",
-    location: "Seattle, WA",
-    type: "Full-time",
-    salary: "$110k - $150k",
-    postedTime: "1 week ago",
-    description: "Join our backend team to build scalable microservices and APIs. Experience with cloud platforms and containerization preferred.",
-    skills: ["Java", "Spring Boot", "Docker", "Kubernetes", "AWS"],
-    isRemote: false,
-    isFeatured: false,
-  },
-  {
-    id: "6",
-    title: "DevOps Engineer",
-    company: "InfraCorp",
-    location: "Remote",
-    type: "Full-time",
-    salary: "$125k - $165k",
-    postedTime: "4 days ago",
-    description: "We're looking for a DevOps engineer to help us scale our infrastructure and improve our deployment processes.",
-    skills: ["AWS", "Terraform", "Jenkins", "Docker", "Monitoring"],
-    isRemote: true,
-    isFeatured: false,
-  },
 ];
 
 const JobList = () => {
-  const { jobs, fetchJobs, isLoading } = useJobs();
+  // const { jobs, fetchJobs, isLoading } = useJobs();
   const [searchQuery, setSearchQuery] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
 
-  useEffect(() => {
-    fetchJobs();
-  }, []);
+  // useEffect(() => {
+  //   fetchJobs();
+  // }, []);
 
   // Transform backend jobs to match frontend format
-  const transformedJobs = jobs.map(job => ({
-    id: job._id,
+  const transformedJobs = mockJobs.map(job => ({
+    id: job.id,
     title: job.title,
-    company: job.companyId?.name || 'Unknown Company',
-    location: job.location || job.companyId?.location || 'Remote',
-    type: 'Full-time', // You can add type to your Job model
-    salary: job.salaryRange || 'Competitive',
-    postedTime: new Date(job.postedAt).toLocaleDateString(),
+    company: job.company,
+    location: job.location,
+    type: job.type,
+    salary: job.salary,
+    postedTime: job.postedTime,
     description: job.description,
-    skills: job.skillsRequired || [],
-    isRemote: !job.location || job.location.toLowerCase().includes('remote'),
-    isFeatured: false, // You can add featured flag to your Job model
+    skills: job.skills,
+    isRemote: job.isRemote,
+    isFeatured: job.isFeatured,
   }));
 
   // Filter jobs based on search criteria

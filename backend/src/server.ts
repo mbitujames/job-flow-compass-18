@@ -42,4 +42,9 @@ export const startServer = async () => {
   }
 };
 
+// Start the server
+startServer().catch((error) => {
+  console.error('Failed to start server:', error);
+});
+
 export default app;
