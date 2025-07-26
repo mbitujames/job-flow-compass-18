@@ -35,7 +35,7 @@ interface Application {
 interface JobContextType {
   jobs: Job[];
   applications: Application[];
-  fetchJobs: () => Promise<void>;
+  fetchJobs: (searchQuery?: string) => Promise<void>;
   fetchApplications: () => Promise<void>;
   applyToJob: (jobId: string, coverLetter?: string) => Promise<boolean>;
   createJob: (jobData: any) => Promise<boolean>;
@@ -66,10 +66,14 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, [isAuthenticated]);
 
-  const fetchJobs = async () => {
+  const fetchJobs = async (searchQuery?: string) => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/jobs');
+      const url = searchQuery 
+        ? `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/jobs?search=${encodeURIComponent(searchQuery)}`
+        : `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/jobs`;
+      
+      const response = await fetch(url);
       if (response.ok) {
         const jobsData = await response.json();
         setJobs(jobsData);
@@ -86,7 +90,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const response = await fetch('/api/applications', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/applications`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -106,7 +110,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const token = localStorage.getItem('token');
       if (!token) return false;
 
-      const response = await fetch('/api/applications', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/applications`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -131,7 +135,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const token = localStorage.getItem('token');
       if (!token) return false;
 
-      const response = await fetch('/api/jobs', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/jobs`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -156,7 +160,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const token = localStorage.getItem('token');
       if (!token) return false;
 
-      const response = await fetch(`/api/applications/${applicationId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/applications/${applicationId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -13,6 +13,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import PostJob from "./pages/PostJob";
+import CompanyDashboard from "./pages/CompanyDashboard";
 import ResumeBuilder from "./pages/ResumeBuilder";
 import SkillAssessment from "./pages/SkillAssessment";
 import NotFound from "./pages/NotFound";
@@ -35,6 +36,7 @@ const App = () => (
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/company-dashboard" element={<CompanyDashboard />} />
               <Route path="/post-job" element={<PostJob />} />
               <Route path="/resume-builder" element={<ResumeBuilder />} />
               <Route path="/skill-assessment" element={<SkillAssessment />} />

@@ -3,104 +3,59 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import SearchBar from "@/components/SearchBar";
 import JobCard from "./JobCard";
 import { Filter, Search, MapPin, SlidersHorizontal, Grid, List } from "lucide-react";
 import { useJobs } from "@/contexts/JobContext";
 
-const mockJobs = [
-  {
-    id: "1",
-    title: "Senior Frontend Developer",
-    company: "TechCorp",
-    location: "San Francisco, CA",
-    type: "Full-time",
-    salary: "$120k - $180k",
-    postedTime: "2 days ago",
-    description: "We're looking for a senior frontend developer to join our growing team. You'll be working on cutting-edge React applications and helping shape our frontend architecture.",
-    skills: ["React", "TypeScript", "Node.js", "GraphQL", "AWS"],
-    isRemote: true,
-    isFeatured: true,
-  },
-  {
-    id: "2",
-    title: "Product Manager",
-    company: "StartupCo",
-    location: "New York, NY",
-    type: "Full-time",
-    salary: "$130k - $160k",
-    postedTime: "1 day ago",
-    description: "Join our product team to drive strategy and execution for our flagship SaaS platform. Experience with B2B products and agile methodologies required.",
-    skills: ["Product Strategy", "Agile", "Analytics", "User Research", "Figma"],
-    isRemote: false,
-    isFeatured: false,
-  },
-  {
-    id: "3",
-    title: "Data Scientist",
-    company: "DataTech",
-    location: "Remote",
-    type: "Contract",
-    salary: "$100k - $140k",
-    postedTime: "5 hours ago",
-    description: "Looking for a data scientist to work on machine learning models and data analysis. Strong Python and SQL skills required.",
-    skills: ["Python", "SQL", "Machine Learning", "TensorFlow", "Pandas"],
-    isRemote: true,
-    isFeatured: false,
-  },
-  {
-    id: "4",
-    title: "UX Designer",
-    company: "DesignStudio",
-    location: "Austin, TX",
-    type: "Full-time",
-    salary: "$85k - $110k",
-    postedTime: "3 days ago",
-    description: "We're seeking a talented UX designer to create intuitive and beautiful user experiences for our mobile and web applications.",
-    skills: ["Figma", "Sketch", "User Research", "Prototyping", "Design Systems"],
-    isRemote: true,
-    isFeatured: true,
-  },
-];
-
 const JobList = () => {
-  // const { jobs, fetchJobs, isLoading } = useJobs();
+  const { jobs, fetchJobs, isLoading } = useJobs();
   const [searchQuery, setSearchQuery] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
 
-  // useEffect(() => {
-  //   fetchJobs();
-  // }, []);
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    fetchJobs(query);
+  };
 
   // Transform backend jobs to match frontend format
-  const transformedJobs = mockJobs.map(job => ({
-    id: job.id,
+  const transformedJobs = jobs.map(job => ({
+    _id: job._id,
+    id: job._id,
     title: job.title,
-    company: job.company,
-    location: job.location,
-    type: job.type,
-    salary: job.salary,
-    postedTime: job.postedTime,
+    company: job.companyId?.name || 'Unknown Company',
+    location: job.location || 'Remote',
+    type: 'Full-time', // Default since backend doesn't have this field yet
+    salary: job.salaryRange || 'Competitive',
+    postedTime: new Date(job.postedAt).toLocaleDateString(),
     description: job.description,
-    skills: job.skills,
-    isRemote: job.isRemote,
-    isFeatured: job.isFeatured,
+    skills: job.skillsRequired || [],
+    isRemote: job.location?.toLowerCase().includes('remote') || false,
+    isFeatured: false,
   }));
 
   // Filter jobs based on search criteria
   const filteredJobs = transformedJobs.filter((job) => {
-    const matchesSearch = !searchQuery || 
-      job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()));
-    
     const matchesLocation = !locationFilter || job.location.toLowerCase().includes(locationFilter.toLowerCase());
     const matchesType = !typeFilter || job.type === typeFilter;
     
-    return matchesSearch && matchesLocation && matchesType;
+    return matchesLocation && matchesType;
   });
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <section className="py-16 bg-background">
@@ -115,48 +70,43 @@ const JobList = () => {
           </p>
         </div>
 
-        {/* Search and Filters */}
-        <div className="bg-card rounded-xl p-6 shadow-soft mb-8">
-          {/* Main Search Bar */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-            <div className="md:col-span-2 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <Input
-                placeholder="Search jobs, companies, or skills..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-12"
-              />
-            </div>
-            
-            <div className="relative">
-              <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <Input
-                placeholder="Location"
-                value={locationFilter}
-                onChange={(e) => setLocationFilter(e.target.value)}
-                className="pl-10 h-12"
-              />
-            </div>
+        {/* Search Bar */}
+        <div className="flex justify-center mb-8">
+          <SearchBar onSearch={handleSearch} />
+        </div>
 
+        {/* Advanced Filters */}
+        <div className="bg-card rounded-xl p-6 shadow-soft mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="font-semibold">Filter Jobs</h3>
             <Button 
               variant="outline" 
               onClick={() => setShowFilters(!showFilters)}
-              className="h-12"
+              size="sm"
             >
-              <SlidersHorizontal className="mr-2 h-5 w-5" />
-              Filters
+              <SlidersHorizontal className="mr-2 h-4 w-4" />
+              {showFilters ? 'Hide' : 'Show'} Filters
             </Button>
           </div>
 
-          {/* Advanced Filters */}
           {showFilters && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-border">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Filter by location"
+                  value={locationFilter}
+                  onChange={(e) => setLocationFilter(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+
               <Select value={typeFilter} onValueChange={setTypeFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="Job Type" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="">All Types</SelectItem>
                   <SelectItem value="Full-time">Full-time</SelectItem>
                   <SelectItem value="Part-time">Part-time</SelectItem>
                   <SelectItem value="Contract">Contract</SelectItem>
@@ -175,18 +125,6 @@ const JobList = () => {
                   <SelectItem value="lead">Lead/Principal</SelectItem>
                 </SelectContent>
               </Select>
-
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Salary Range" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="0-50k">$0 - $50k</SelectItem>
-                  <SelectItem value="50k-100k">$50k - $100k</SelectItem>
-                  <SelectItem value="100k-150k">$100k - $150k</SelectItem>
-                  <SelectItem value="150k+">$150k+</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
           )}
         </div>
@@ -199,7 +137,7 @@ const JobList = () => {
             </span>
             <div className="flex gap-2">
               <Badge variant="secondary">Remote Available</Badge>
-              <Badge variant="secondary">Featured</Badge>
+              <Badge variant="secondary">Latest Postings</Badge>
             </div>
           </div>
           
@@ -228,12 +166,20 @@ const JobList = () => {
           ))}
         </div>
 
+        {filteredJobs.length === 0 && (
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">No jobs found matching your criteria</p>
+          </div>
+        )}
+
         {/* Load More */}
-        <div className="text-center mt-12">
-          <Button variant="outline" size="lg">
-            Load More Jobs
-          </Button>
-        </div>
+        {filteredJobs.length > 0 && (
+          <div className="text-center mt-12">
+            <Button variant="outline" size="lg">
+              Load More Jobs
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );

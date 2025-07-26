@@ -4,7 +4,7 @@ interface User {
   _id: string;
   name: string;
   email: string;
-  role: 'jobseeker' | 'employer' | 'admin';
+  role: 'jobseeker' | 'employer' | 'admin' | 'company';
   createdAt: string;
   updatedAt: string;
 }
@@ -44,7 +44,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const fetchProfile = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/auth/profile', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -66,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signup = async (name: string, email: string, password: string, role: string): Promise<boolean> => {
     try {
-      const response = await fetch('/api/auth/signup', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
