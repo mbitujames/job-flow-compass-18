@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import Company from './src/models/Company';
 import Job from './src/models/Job';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/jobflow';
+const MONGODB_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/jobflow';
 
 const companiesData = [
   {

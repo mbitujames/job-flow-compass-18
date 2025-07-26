@@ -8,7 +8,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/mern-jobboard';
+const MONGO_URI = process.env.MONGO_URI as string; // Use environment variable only, no fallback to localhost
 
 // Middleware
 app.use(cors());
@@ -32,7 +32,9 @@ app.get('/', (req: Request, res: Response) => {
 
 export const startServer = async () => {
   try {
-    await mongoose.connect(MONGO_URI);
+    await mongoose.connect(MONGO_URI, {
+      // useNewUrlParser and useUnifiedTopology are no longer supported options in mongoose v7+
+    });
     console.log('Connected to MongoDB');
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
