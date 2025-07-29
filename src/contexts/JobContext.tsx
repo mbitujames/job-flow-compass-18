@@ -69,17 +69,24 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const fetchJobs = async (searchQuery?: string) => {
     try {
       setIsLoading(true);
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       const url = searchQuery 
-        ? `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/jobs?search=${encodeURIComponent(searchQuery)}`
-        : `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/jobs`;
+        ? `${API_URL}/api/jobs?search=${encodeURIComponent(searchQuery)}`
+        : `${API_URL}/api/jobs`;
       
+      console.log('Fetching jobs from:', url);
       const response = await fetch(url);
       if (response.ok) {
         const jobsData = await response.json();
         setJobs(jobsData);
+        console.log('Jobs fetched successfully:', jobsData.length);
+      } else {
+        console.error('Failed to fetch jobs:', response.status, response.statusText);
+        // Keep existing jobs if fetch fails
       }
     } catch (error) {
       console.error('Error fetching jobs:', error);
+      // Keep existing jobs if fetch fails
     } finally {
       setIsLoading(false);
     }

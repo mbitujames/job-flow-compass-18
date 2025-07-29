@@ -44,7 +44,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const fetchProfile = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/profile`, {
+      if (!token) {
+        setIsLoading(false);
+        return;
+      }
+      
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      console.log('Fetching profile from:', `${API_URL}/api/auth/profile`);
+      
+      const response = await fetch(`${API_URL}/api/auth/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -54,6 +62,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const userData = await response.json();
         setUser(userData);
       } else {
+        console.error('Profile fetch failed:', response.status, response.statusText);
         localStorage.removeItem('token');
       }
     } catch (error) {
@@ -66,7 +75,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/login`, {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      console.log('Attempting login to:', `${API_URL}/api/auth/login`);
+      
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -79,6 +91,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.setItem('token', data.token);
         await fetchProfile();
         return true;
+      } else {
+        console.error('Login failed:', response.status, response.statusText);
+        const errorData = await response.text();
+        console.error('Error details:', errorData);
       }
       return false;
     } catch (error) {
@@ -89,7 +105,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signup = async (name: string, email: string, password: string, role: string): Promise<boolean> => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/signup`, {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      console.log('Attempting signup to:', `${API_URL}/api/auth/signup`);
+      
+      const response = await fetch(`${API_URL}/api/auth/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -97,7 +116,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         body: JSON.stringify({ name, email, password, role }),
       });
 
-      return response.ok;
+      if (response.ok) {
+        return true;
+      } else {
+        console.error('Signup failed:', response.status, response.statusText);
+        const errorData = await response.text();
+        console.error('Error details:', errorData);
+      }
+      return false;
     } catch (error) {
       console.error('Signup error:', error);
       return false;

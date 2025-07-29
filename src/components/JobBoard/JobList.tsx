@@ -15,6 +15,70 @@ const JobList = () => {
   const [typeFilter, setTypeFilter] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
+  
+  // Fallback jobs when backend is not available
+  const fallbackJobs = [
+    {
+      _id: "1",
+      title: "Senior Frontend Developer",
+      description: "We are looking for an experienced frontend developer to join our team and build amazing user experiences.",
+      companyId: { _id: "1", name: "TechCorp", description: "Leading tech company", location: "San Francisco, CA" },
+      location: "San Francisco, CA",
+      salaryRange: "$120,000 - $150,000",
+      skillsRequired: ["React", "JavaScript", "TypeScript", "CSS"],
+      status: "open" as const,
+      postedAt: "2024-01-15T00:00:00Z",
+      updatedAt: "2024-01-15T00:00:00Z"
+    },
+    {
+      _id: "2", 
+      title: "Product Manager",
+      description: "Seeking a strategic product manager to drive our product roadmap and work with cross-functional teams.",
+      companyId: { _id: "2", name: "InnovateCo", description: "Innovation company", location: "New York, NY" },
+      location: "New York, NY",
+      salaryRange: "$110,000 - $140,000",
+      skillsRequired: ["Product Strategy", "Analytics", "Agile", "Roadmapping"],
+      status: "open" as const,
+      postedAt: "2024-01-14T00:00:00Z",
+      updatedAt: "2024-01-14T00:00:00Z"
+    },
+    {
+      _id: "3",
+      title: "Data Scientist",
+      description: "Join our data team to build machine learning models and derive insights from complex datasets.",
+      companyId: { _id: "3", name: "DataDrive", description: "Data analytics company", location: "Seattle, WA" },
+      location: "Seattle, WA",
+      salaryRange: "$130,000 - $160,000",
+      skillsRequired: ["Python", "Machine Learning", "SQL", "Statistics"],
+      status: "open" as const,
+      postedAt: "2024-01-13T00:00:00Z",
+      updatedAt: "2024-01-13T00:00:00Z"
+    },
+    {
+      _id: "4",
+      title: "UX Designer",
+      description: "Looking for a creative UX designer to enhance user experiences and create intuitive interfaces.",
+      companyId: { _id: "4", name: "DesignStudio", description: "Creative design agency", location: "Austin, TX" },
+      location: "Austin, TX", 
+      salaryRange: "$90,000 - $120,000",
+      skillsRequired: ["Figma", "User Research", "Prototyping", "Design Systems"],
+      status: "open" as const,
+      postedAt: "2024-01-12T00:00:00Z",
+      updatedAt: "2024-01-12T00:00:00Z"
+    },
+    {
+      _id: "5",
+      title: "Backend Engineer",
+      description: "Build scalable backend systems and APIs to support our growing platform.",
+      companyId: { _id: "5", name: "CloudTech", description: "Cloud infrastructure company", location: "Remote" },
+      location: "Remote",
+      salaryRange: "$125,000 - $155,000",
+      skillsRequired: ["Node.js", "Python", "AWS", "Microservices"],
+      status: "open" as const,
+      postedAt: "2024-01-11T00:00:00Z",
+      updatedAt: "2024-01-11T00:00:00Z"
+    }
+  ];
 
   useEffect(() => {
     fetchJobs();
@@ -25,8 +89,11 @@ const JobList = () => {
     fetchJobs(query);
   };
 
-  // Transform backend jobs to match frontend format
-  const transformedJobs = jobs.map(job => ({
+  // Use fallback jobs if backend jobs are empty
+  const jobsToUse = jobs.length > 0 ? jobs : fallbackJobs;
+  
+  // Transform jobs to match frontend format
+  const transformedJobs = jobsToUse.map(job => ({
     _id: job._id,
     id: job._id,
     title: job.title,
