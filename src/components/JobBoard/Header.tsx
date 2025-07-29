@@ -1,10 +1,19 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, User, Briefcase, Bell } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Menu, X, User, Briefcase, Bell, LogOut, LayoutDashboard, Building2, Plus } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <header className="bg-background/95 backdrop-blur-md border-b border-border sticky top-0 z-50">
@@ -28,21 +37,58 @@ const Header = () => {
             <Link to="/resources" className="text-foreground hover:text-primary transition-smooth">
               Resources
             </Link>
+            {isAuthenticated && (
+              <Link 
+                to={user?.role === "employer" || user?.role === "company" ? "/company-dashboard" : "/dashboard"} 
+                className="text-foreground hover:text-primary transition-smooth"
+              >
+                Dashboard
+              </Link>
+            )}
           </nav>
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/signin">
-              <Button variant="ghost" size="sm">
-                <User className="mr-2 h-4 w-4" />
-                Sign In
-              </Button>
-            </Link>
-            <Link to="/post-job">
-              <Button variant="hero" size="sm">
-                Post a Job
-              </Button>
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Button variant="ghost" size="sm">
+                  <Bell className="mr-2 h-4 w-4" />
+                  Notifications
+                </Button>
+                {(user?.role === "employer" || user?.role === "company") && (
+                  <Link to="/post-job">
+                    <Button variant="default" size="sm">
+                      <Plus className="mr-2 h-4 w-4" />
+                      Post Job
+                    </Button>
+                  </Link>
+                )}
+                <Link to={user?.role === "employer" || user?.role === "company" ? "/company-dashboard" : "/dashboard"}>
+                  <Button variant="ghost" size="sm">
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    Dashboard
+                  </Button>
+                </Link>
+                <Button variant="outline" size="sm" onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link to="/signin">
+                  <Button variant="ghost" size="sm">
+                    <User className="mr-2 h-4 w-4" />
+                    Sign In
+                  </Button>
+                </Link>
+                <Link to="/post-job">
+                  <Button variant="hero" size="sm">
+                    Post a Job
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -58,27 +104,80 @@ const Header = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-border">
             <div className="flex flex-col space-y-4">
-              <Link to="/jobs" className="text-foreground hover:text-primary transition-smooth">
+              <Link 
+                to="/jobs" 
+                className="text-foreground hover:text-primary transition-smooth"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 Find Jobs
               </Link>
-              <Link to="/companies" className="text-foreground hover:text-primary transition-smooth">
+              <Link 
+                to="/companies" 
+                className="text-foreground hover:text-primary transition-smooth"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 Companies
               </Link>
-              <Link to="/resources" className="text-foreground hover:text-primary transition-smooth">
+              <Link 
+                to="/resources" 
+                className="text-foreground hover:text-primary transition-smooth"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 Resources
               </Link>
+              {isAuthenticated && (
+                <Link 
+                  to={user?.role === "employer" || user?.role === "company" ? "/company-dashboard" : "/dashboard"}
+                  className="text-foreground hover:text-primary transition-smooth"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Dashboard
+                </Link>
+              )}
               <div className="flex flex-col space-y-2 pt-4">
-                <Link to="/signin">
-                  <Button variant="ghost" size="sm" className="justify-start w-full">
-                    <User className="mr-2 h-4 w-4" />
-                    Sign In
-                  </Button>
-                </Link>
-                <Link to="/post-job">
-                  <Button variant="hero" size="sm">
-                    Post a Job
-                  </Button>
-                </Link>
+                {isAuthenticated ? (
+                  <>
+                    <Button variant="ghost" size="sm" className="justify-start w-full">
+                      <Bell className="mr-2 h-4 w-4" />
+                      Notifications
+                    </Button>
+                    {(user?.role === "employer" || user?.role === "company") && (
+                      <Link to="/post-job" onClick={() => setIsMobileMenuOpen(false)}>
+                        <Button variant="default" size="sm" className="w-full">
+                          <Plus className="mr-2 h-4 w-4" />
+                          Post Job
+                        </Button>
+                      </Link>
+                    )}
+                    <Link 
+                      to={user?.role === "employer" || user?.role === "company" ? "/company-dashboard" : "/dashboard"}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Button variant="ghost" size="sm" className="justify-start w-full">
+                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                        Dashboard
+                      </Button>
+                    </Link>
+                    <Button variant="outline" size="sm" className="justify-start w-full" onClick={handleLogout}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/signin" onClick={() => setIsMobileMenuOpen(false)}>
+                      <Button variant="ghost" size="sm" className="justify-start w-full">
+                        <User className="mr-2 h-4 w-4" />
+                        Sign In
+                      </Button>
+                    </Link>
+                    <Link to="/post-job" onClick={() => setIsMobileMenuOpen(false)}>
+                      <Button variant="hero" size="sm" className="w-full">
+                        Post a Job
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -149,14 +149,20 @@ const JobCard = ({ job }: JobCardProps) => {
 
       {/* Actions */}
       <div className="flex items-center justify-between">
-        <Button variant="outline" size="sm">
-          <ExternalLink className="mr-2 h-4 w-4" />
-          View Details
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" disabled={!isAuthenticated}>
+            <ExternalLink className="mr-2 h-4 w-4" />
+            View Details
+          </Button>
+          <Button variant="outline" size="sm" disabled={!isAuthenticated}>
+            <Briefcase className="mr-2 h-4 w-4" />
+            View Company
+          </Button>
+        </div>
         
         <Dialog open={isApplyDialogOpen} onOpenChange={setIsApplyDialogOpen}>
           <DialogTrigger asChild>
-            <Button variant="default" size="sm">
+            <Button variant="default" size="sm" disabled={!isAuthenticated}>
               Apply Now
             </Button>
           </DialogTrigger>

@@ -242,7 +242,14 @@ const JobList = () => {
         {/* Load More */}
         {filteredJobs.length > 0 && (
           <div className="text-center mt-12">
-            <Button variant="outline" size="lg">
+            <Button 
+              variant="outline" 
+              size="lg"
+              onClick={() => {
+                // Load more jobs functionality
+                console.log('Loading more jobs...');
+              }}
+            >
               Load More Jobs
             </Button>
           </div>

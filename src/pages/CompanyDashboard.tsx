@@ -121,12 +121,16 @@ const CompanyDashboard = () => {
       <Header />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Company Dashboard</h1>
             <p className="text-muted-foreground">Welcome back, {user?.name}</p>
           </div>
           <div className="flex gap-2">
+            <Button variant="default" size="sm" onClick={() => navigate('/post-job')}>
+              <Building2 className="h-4 w-4 mr-2" />
+              Post New Job
+            </Button>
             <Button variant="outline" size="sm">
               <Bell className="h-4 w-4 mr-2" />
               Notifications
@@ -209,6 +213,9 @@ const CompanyDashboard = () => {
                           {job.applications?.length || 0} applications
                         </span>
                         <div className="flex gap-2">
+                          <Button variant="outline" size="sm" onClick={() => navigate(`/jobs/${job._id}`)}>
+                            View
+                          </Button>
                           <Button variant="outline" size="sm">
                             Edit
                           </Button>

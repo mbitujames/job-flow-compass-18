@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { JobProvider } from "./contexts/JobContext";
+import Footer from "./components/Footer";
 import Index from "./pages/Index";
 import Jobs from "./pages/Jobs";
 import Companies from "./pages/Companies";
@@ -28,21 +29,24 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/jobs" element={<Jobs />} />
-              <Route path="/companies" element={<Companies />} />
-              <Route path="/resources" element={<Resources />} />
-              <Route path="/signin" element={<SignIn />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/company-dashboard" element={<CompanyDashboard />} />
-              <Route path="/post-job" element={<PostJob />} />
-              <Route path="/resume-builder" element={<ResumeBuilder />} />
-              <Route path="/skill-assessment" element={<SkillAssessment />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <div className="min-h-screen flex flex-col">
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/jobs" element={<Jobs />} />
+                <Route path="/companies" element={<Companies />} />
+                <Route path="/resources" element={<Resources />} />
+                <Route path="/signin" element={<SignIn />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/company-dashboard" element={<CompanyDashboard />} />
+                <Route path="/post-job" element={<PostJob />} />
+                <Route path="/resume-builder" element={<ResumeBuilder />} />
+                <Route path="/skill-assessment" element={<SkillAssessment />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+              <Footer />
+            </div>
           </BrowserRouter>
         </JobProvider>
       </AuthProvider>
